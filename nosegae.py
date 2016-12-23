@@ -48,6 +48,8 @@ class NoseGAE(Plugin):
             help='Set the path to the GAE datastore to use in tests. '
             'Note that when using an existing datastore directory, the '
             'datastore will not be cleared before testing begins.')
+        parser.add_option(
+            '--gae-application-id', default=None, action='store', dest='gae_appid', help='')
 
     def configure(self, options, config):
         super(NoseGAE, self).configure(options, config)
@@ -101,7 +103,7 @@ class NoseGAE(Plugin):
         # get the app id out of your app.yaml and stuff
         self.configuration = application_configuration.ApplicationConfiguration(self._app_path)
 
-        os.environ['APPLICATION_ID'] = self.configuration.app_id
+        os.environ['APPLICATION_ID'] = options.gae_appid if options.gae_appid else self.configuration.app_id
         # simulate same environment as devappserver2
         os.environ['CURRENT_VERSION_ID'] = self.configuration.modules[0].version_id
 
